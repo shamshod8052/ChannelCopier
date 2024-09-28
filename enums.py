@@ -7,8 +7,12 @@ class Texts:
         'uz': "🚫 Bekor qilish"
     }
 
+    MAIN_MENU = {
+        'uz': "🏘 Bosh menyu"
+    }
+
     CHANNELS = {
-        'uz': "👥 Kanallarim"
+        'uz': "🔄 Kanallarim"
     }
 
     YOUR_CHANNELS = {
@@ -28,7 +32,7 @@ class Texts:
     }
 
     NOT_FOUND_CHANNEL = {
-        'uz': "⏳ Iltimos, kanalning biror xabarini botga uzating..."
+        'uz': "⏳ Iltimos, faqat kanalning biror xabarini botga uzating..."
     }
 
     ADDED_CHANNEL = {
@@ -53,4 +57,40 @@ class Texts:
 
     SELECT_MENUS = {
         'uz': "⏳ Menyulardan birini tanlang yoki /start tugmasini bosing!"
+    }
+
+    ADMINS = {
+        'uz': "👥 Adminlar"
+    }
+
+    YOUR_ADMINS = {
+        'uz': "♻️ Sizning adminlaringiz..."
+    }
+
+    SEND_ADMIN = {
+        'uz': "⏳ Admin bilan chatingizdagi, admin yozgan biror xabarni botga uzating..."
+    }
+
+    NOT_FOUND_ADMIN = {
+        'uz': "⏳ Iltimos, faqat adminning xabarini botga uzating..."
+    }
+
+    ADDED_ADMIN = {
+        'uz': "✅ Yangi admin muvaffaqiyatli yaratildi!"
+    }
+
+    NOT_ADD_ADMIN = {
+        'uz': "❗️ Yangi adminni yaratolmadim!"
+    }
+
+    INPUT_ADMIN_FOR_REMOVE = {
+        'uz': "⏳ O'chirish uchun admin nomini kiriting..."
+    }
+
+    NOT_REMOVE_ADMIN = {
+        'uz': "❗️ Adminni botdan o'chirolmadim!"
+    }
+
+    REMOVED_ADMIN = {
+        'uz': "✅ Admin muvaffaqiyatli o'chirildi!"
     }

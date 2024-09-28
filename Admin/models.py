@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Channel(models.Model):
-    full_name = models.CharField(max_length=255)
-    username = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=255, null=True, blank=True)
+    username = models.CharField(max_length=255, null=True, blank=True)
     chat_id = models.CharField(max_length=255)
 
     update_at = models.DateTimeField(verbose_name='Last activity', auto_now=True)
@@ -18,10 +18,12 @@ class Channel(models.Model):
 
 
 class User(models.Model):
-    full_name = models.CharField(max_length=255)
-    username = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=255, null=True, blank=True)
+    username = models.CharField(max_length=255, null=True, blank=True)
     chat_id = models.CharField(max_length=255)
-    channels = models.ManyToManyField(Channel)
+    is_admin = models.BooleanField(default=False)
+    admins = models.ManyToManyField('User', blank=True, related_name='boss')
+    channels = models.ManyToManyField(Channel, blank=True, related_name='user')
 
     update_at = models.DateTimeField(verbose_name='Last activity', auto_now=True)
     created_at = models.DateTimeField(verbose_name='Created at', auto_now_add=True)
