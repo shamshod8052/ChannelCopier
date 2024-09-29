@@ -3,26 +3,28 @@ import re
 
 from django.db.models import Q
 from telethon import events
+from telethon.errors.rpcerrorlist import MessageEmptyError
 from telethon.events.newmessage import NewMessage
+from telethon.tl.types import MessageEntityMention, MessageEntityUrl, MessageEntityEmail, MessageEntityTextUrl, \
+    MessageEntityMentionName, InputMessageEntityMentionName, MessageEntityPhone
 
 from Admin.models import Channel, User
 from user_bot.loader import client
 
 media_groups = dict()
+from telethon.extensions import markdown, html
 
 
-def clean_text(text):
+async def clean_text(text):
     if not text:
         return text
 
     phone_pattern = r'\+?\d[\d\s\-\(\)]{7,}\d'
     username_pattern = r'@\w+'
-    url_pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+    url_pattern = r'(?:http[s]?://|www\.)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(?:/[^\s]*)?'
 
     text = re.sub(phone_pattern, '', text)
-
     text = re.sub(username_pattern, '', text)
-
     text = re.sub(url_pattern, '', text)
 
     return text.strip()
@@ -52,17 +54,29 @@ async def echo_(event: NewMessage.Event):
                 media_groups[event.message.grouped_id]['text'] = event.message.message
         media_groups[event.message.grouped_id]['messages'].append(event.message)
         media_groups[event.message.grouped_id]['message_ids'].append(event.message.id)
-        
+
         await asyncio.sleep(1)
+
         if event.message.id == media_groups[event.message.grouped_id].get('message_ids')[0]:
             medias = media_groups[event.message.grouped_id].get('messages')
             text = media_groups[event.message.grouped_id].get('text')
-            caption = clean_text(text)
+            entities = []
+            if event.message.entities:
+                for entity in event.message.entities:
+                    if entity.__class__ not in [MessageEntityMention, MessageEntityUrl, MessageEntityEmail,
+                                                MessageEntityTextUrl, MessageEntityMentionName,
+                                                InputMessageEntityMentionName, MessageEntityPhone]:
+                        entities.append(entity)
+            caption = markdown.unparse(text, entities)
+            caption = await clean_text(caption)
             await client.send_file(send_chat_id, file=medias, caption=caption)
         else:
             return
     else:
         msg = event.message
-        msg.message = clean_text(msg.message)
-        await client.send_message(send_chat_id, message=msg)
+        msg.message = await clean_text(msg.message)
+        try:
+            await client.send_message(send_chat_id, message=msg)
+        except MessageEmptyError:
+            ...
         return
