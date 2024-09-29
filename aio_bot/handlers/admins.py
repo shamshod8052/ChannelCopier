@@ -13,8 +13,6 @@ from aio_bot.states import AdminForm
 from enums import Texts
 
 
-@dp.message(F.text.in_(Texts.CANCEL.values()), AdminForm.GetAdmin)
-@dp.message(F.text.in_(Texts.CANCEL.values()), AdminForm.RemoveAdmin)
 @dp.message(IsAdminFilter(), F.text.in_(Texts.ADMINS.values()))
 async def my_admins(message: Message, state: FSMContext):
     await state.set_state(AdminForm.Admin)
@@ -63,7 +61,7 @@ async def get_admin_for_remove(message: Message, state: FSMContext):
 
     try:
         if admin:
-            admin.delete()
+            user.admins.remove(admin)
     except:
         await message.answer(Texts.NOT_REMOVE_ADMIN[DEFAULT_LANG])
     else:
@@ -72,7 +70,7 @@ async def get_admin_for_remove(message: Message, state: FSMContext):
         await state.set_state(AdminForm.Admin)
 
 
-@dp.message(IsAdminFilter(), UserFilter())
+@dp.message(AdminForm.Admin, IsAdminFilter(), UserFilter())
 async def admin_info(message: Message):
     user = User.objects.get(chat_id=message.chat.id)
     admin: Optional[Channel] = await get_user(user.admins, message.text)

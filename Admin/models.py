@@ -23,7 +23,8 @@ class User(models.Model):
     chat_id = models.CharField(max_length=255)
     is_admin = models.BooleanField(default=False)
     admins = models.ManyToManyField('User', blank=True, related_name='boss')
-    channels = models.ManyToManyField(Channel, blank=True, related_name='user')
+    channels = models.ManyToManyField(Channel, blank=True, related_name='users')
+    channel_for_send = models.ForeignKey(Channel, null=True, blank=True, on_delete=models.SET_NULL, related_name='user')
 
     update_at = models.DateTimeField(verbose_name='Last activity', auto_now=True)
     created_at = models.DateTimeField(verbose_name='Created at', auto_now_add=True)

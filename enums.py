@@ -11,8 +11,12 @@ class Texts:
         'uz': "🏘 Bosh menyu"
     }
 
+    CHANGE = {
+        'uz': "♻️ O'zgartirish"
+    }
+
     CHANNELS = {
-        'uz': "🔄 Kanallarim"
+        'uz': "🔄 Kanallar"
     }
 
     YOUR_CHANNELS = {
@@ -93,4 +97,12 @@ class Texts:
 
     REMOVED_ADMIN = {
         'uz': "✅ Admin muvaffaqiyatli o'chirildi!"
+    }
+
+    MY_CHANNEL = {
+        'uz': "♻️ Mening kanalim"
+    }
+
+    INPUT_MY_CHANNEL = {
+        'uz': "♻️ Barcha olingan xabarlar yuboriladigan kanaldan biror xabarni botga uzating..."
     }
