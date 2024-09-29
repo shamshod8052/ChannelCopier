@@ -12,7 +12,7 @@ from Admin.models import Channel, User
 from user_bot.loader import client
 
 media_groups = dict()
-from telethon.extensions import markdown, html
+from telethon.extensions import markdown
 
 
 async def clean_text(text):
