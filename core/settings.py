@@ -14,7 +14,7 @@ DB_PORT = env.str('DB_PORT')
 
 DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
