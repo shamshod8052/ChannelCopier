@@ -1,10 +1,11 @@
 import asyncio
 import re
 
+from django.db.models import Q
 from telethon import events
 from telethon.events.newmessage import NewMessage
 
-from Admin.models import Channel
+from Admin.models import Channel, User
 from user_bot.loader import client
 
 media_groups = dict()
@@ -29,13 +30,18 @@ def clean_text(text):
 
 @client.on(events.NewMessage)
 async def echo_(event: NewMessage.Event):
-    print(event.chat_id)
     try:
         channel = Channel.objects.get(chat_id=event.chat_id)
     except Channel.DoesNotExist:
         return
-    if not (channel.user.exists() and (channel.user.first().is_admin or channel.user.first().boss.exists())):
+
+    if not (channel.users.exists() and (channel.users.first().is_admin or channel.users.first().boss.exists())):
         return
+    send_for_users = User.objects.filter(~Q(channel_for_send=None), is_admin=True)
+    if not send_for_users.exists():
+        return
+    channel_for_send = send_for_users.first().channel_for_send
+    send_chat_id = int(channel_for_send.chat_id)
 
     if event.message.grouped_id:  # This is media group
         if not media_groups.get(event.message.grouped_id):
@@ -52,11 +58,11 @@ async def echo_(event: NewMessage.Event):
             medias = media_groups[event.message.grouped_id].get('messages')
             text = media_groups[event.message.grouped_id].get('text')
             caption = clean_text(text)
-            await client.send_file(-1002045971280, file=medias, caption=caption)
+            await client.send_file(send_chat_id, file=medias, caption=caption)
         else:
             return
     else:
         msg = event.message
         msg.message = clean_text(msg.message)
-        await client.send_message(-1002045971280, message=msg)
+        await client.send_message(send_chat_id, message=msg)
         return
