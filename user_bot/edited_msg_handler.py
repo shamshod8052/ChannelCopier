@@ -1,3 +1,5 @@
+from telethon.errors.rpcerrorlist import MessageNotModifiedError
+
 from Admin.models import Message
 from user_bot.loader import client
 from user_bot.text_cleaner import TextCleaner
@@ -71,6 +73,8 @@ class EditedMessageHandler:
 
             # Use the Telegram client to edit the message in the target chat with the cleaned text
             await client.edit_message(self.to_chat_id, message=self.to_message_id, text=text)
+        except MessageNotModifiedError:
+            pass
         except Exception as e:
             # Log any errors that occur during the editing process (can be extended with logging)
             print(f"Error editing message: {e}")
