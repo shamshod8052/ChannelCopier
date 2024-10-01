@@ -59,12 +59,12 @@ class TextCleaner:
         """
         remove_indexes = []
         new_entities = []
-
-        for entity in entities:
-            if isinstance(entity, (MessageEntityPhone, MessageEntityUrl, MessageEntityEmail,
-                                   MessageEntityTextUrl, MessageEntityMention, MessageEntityMentionName,
-                                   InputMessageEntityMentionName)):
-                remove_indexes.append((entity.offset, entity.length))
+        if entities:
+            for entity in entities:
+                if isinstance(entity, (MessageEntityPhone, MessageEntityUrl, MessageEntityEmail,
+                                       MessageEntityTextUrl, MessageEntityMention, MessageEntityMentionName,
+                                       InputMessageEntityMentionName)):
+                    remove_indexes.append((entity.offset, entity.length))
 
         cleaned_text = text
         for offset, length in remove_indexes:
