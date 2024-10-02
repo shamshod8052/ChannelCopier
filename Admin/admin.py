@@ -15,4 +15,4 @@ class ChannelAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class ChannelAdmin(admin.ModelAdmin):
-    list_display = ('from_chat_id', 'from_message_id', 'to_chat_id', 'to_message_id', 'update_at', 'created_at')
+    list_display = ('from_chat_id', 'to_chat_id', 'update_at', 'created_at')

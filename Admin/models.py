@@ -39,9 +39,9 @@ class User(models.Model):
 
 class Message(models.Model):
     from_chat_id = models.CharField(max_length=255)
-    from_message_id = models.CharField(max_length=255)
+    from_message_ids = models.JSONField(default=list, null=True, blank=True)
     to_chat_id = models.CharField(max_length=255)
-    to_message_id = models.CharField(max_length=255)
+    to_message_ids = models.JSONField(default=list, null=True, blank=True)
 
     update_at = models.DateTimeField(verbose_name='Last activity', auto_now=True)
     created_at = models.DateTimeField(verbose_name='Created at', auto_now_add=True)
