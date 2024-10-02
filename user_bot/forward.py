@@ -1,6 +1,7 @@
 import asyncio
 from telethon.errors import MessageEmptyError
 from Admin.models import Message
+from user_bot.config import SLEEP_TIME_MEDIA_GROUP
 from user_bot.message import MyMessage
 from user_bot.text_cleaner import TextCleaner
 from user_bot.loader import client
@@ -36,7 +37,6 @@ class ForwardMessage(MyMessage):
         if self.event.message.grouped_id:
             from_msgs, to_msgs = await self.media_group()
         else:
-            await asyncio.sleep(7)
             from_msgs, to_msgs = await self._forward_single_message()
 
         if not from_msgs or not to_msgs:
@@ -68,7 +68,7 @@ class ForwardMessage(MyMessage):
             media_group.setdefault('text', self.event.message.message)
 
         # Wait briefly to ensure the media group is complete
-        await asyncio.sleep(5)
+        await asyncio.sleep(SLEEP_TIME_MEDIA_GROUP)
 
         # Send the media group if this is the first message in the group
         if self.event.message.id == media_group['message_ids'][0]:

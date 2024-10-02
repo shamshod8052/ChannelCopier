@@ -1,6 +1,8 @@
 import asyncio
 
 from telethon.errors.rpcerrorlist import MessageNotModifiedError
+
+from user_bot.config import SLEEP_TIME_EDIT
 from user_bot.loader import client
 from user_bot.message import MyMessage
 from user_bot.text_cleaner import TextCleaner
@@ -22,6 +24,7 @@ class EditedMessage(MyMessage):
         Main method to edit the message. It first retrieves the corresponding
         message IDs and then sends the edited message.
         """
+        await asyncio.sleep(SLEEP_TIME_EDIT)
         # Retrieve the corresponding message object from the database
         message_obj = await self._get_message_obj(self.event.message.id)
         if not message_obj:
@@ -38,7 +41,6 @@ class EditedMessage(MyMessage):
 
         # Edit the message if valid chat and message IDs are present
         if self.to_chat_id and self.to_message_id:
-            await asyncio.sleep(7)
             await self._edit_single_message()
 
     async def _edit_single_message(self):

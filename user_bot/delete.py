@@ -1,5 +1,6 @@
 import asyncio
 
+from user_bot.config import SLEEP_TIME_EDIT
 from user_bot.loader import client
 from user_bot.message import MyMessage
 import logging
@@ -21,6 +22,7 @@ class DeleteMessage(MyMessage):
         Main method to delete messages. It fetches the message object based on deleted IDs,
         removes the relevant messages from the database, and proceeds to delete them in the target chat.
         """
+        await asyncio.sleep(SLEEP_TIME_EDIT)
         # Retrieve the message object based on the deleted message IDs
         message_obj = await self._get_message_obj(self.event.deleted_ids)
         if not message_obj:
@@ -44,7 +46,6 @@ class DeleteMessage(MyMessage):
 
         # If valid chat ID and message IDs are present, proceed with the deletion
         if self.to_chat_id and self.to_message_ids:
-            await asyncio.sleep(7)
             await self._delete_single_message()
 
     async def _delete_single_message(self):
