@@ -1,3 +1,5 @@
+import asyncio
+
 from telethon.errors.rpcerrorlist import MessageNotModifiedError
 from user_bot.loader import client
 from user_bot.message import MyMessage
@@ -36,6 +38,7 @@ class EditedMessage(MyMessage):
 
         # Edit the message if valid chat and message IDs are present
         if self.to_chat_id and self.to_message_id:
+            await asyncio.sleep(7)
             await self._edit_single_message()
 
     async def _edit_single_message(self):

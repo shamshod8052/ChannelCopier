@@ -1,3 +1,5 @@
+import asyncio
+
 from user_bot.loader import client
 from user_bot.message import MyMessage
 import logging
@@ -42,6 +44,7 @@ class DeleteMessage(MyMessage):
 
         # If valid chat ID and message IDs are present, proceed with the deletion
         if self.to_chat_id and self.to_message_ids:
+            await asyncio.sleep(7)
             await self._delete_single_message()
 
     async def _delete_single_message(self):
