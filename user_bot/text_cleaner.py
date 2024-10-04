@@ -33,10 +33,11 @@ class TextCleaner:
         cleaned_text = TextCleaner._clean_ads_with_regex(text)
 
         # Optionally, clean text based on message entities
-        # cleaned_text, updated_entities = TextCleaner._clean_ads_with_entities(cleaned_text, entities)
+        cleaned_text, updated_entities = TextCleaner._clean_ads_with_entities(cleaned_text, entities)
 
         # Preserve formatting (limit excessive newlines or spaces)
         cleaned_text = TextCleaner.clean_text_preserve_format(cleaned_text)
+        cleaned_text = f"**{cleaned_text}**"
 
         return cleaned_text
 
@@ -65,6 +66,7 @@ class TextCleaner:
         """
         remove_indexes = []  # Track positions of entities to remove
         new_entities = []     # Updated entities list after cleaning
+        ignore_indexes = []  # Need for ignore
 
         if entities:
             for entity in entities:
@@ -72,14 +74,17 @@ class TextCleaner:
                 if isinstance(entity, (MessageEntityPhone, MessageEntityUrl, MessageEntityEmail,
                                        MessageEntityTextUrl, MessageEntityMention, MessageEntityMentionName,
                                        InputMessageEntityMentionName)):
+                    if isinstance(entity, MessageEntityPhone):
+                        ignore_indexes.append((entity.offset, entity.length))
                     remove_indexes.append((entity.offset, entity.length))
 
         # Replace the text parts for the identified entities
         cleaned_text = text
         for offset, length in remove_indexes:
-            start, end = offset, offset + length
-            # Replace the entity part with spaces to preserve alignment
-            cleaned_text = cleaned_text[:start] + ' ' * (end - start) + cleaned_text[end:]
+            if (offset, length) not in ignore_indexes:
+                start, end = offset, offset + length
+                # Replace the entity part with spaces to preserve alignment
+                cleaned_text = cleaned_text[:start] + ' ' * (end - start) + cleaned_text[end:]
 
         return cleaned_text, new_entities
 
