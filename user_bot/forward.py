@@ -1,7 +1,7 @@
 from telethon.errors import MessageEmptyError
 
 from Admin.models import Message
-from user_bot.loader import client
+from user_bot.loader import client, logger
 from user_bot.message import MyMessage
 from user_bot.text_cleaner import TextCleaner
 
@@ -17,6 +17,7 @@ class ForwardMessage(MyMessage):
         """Forward the message to another chat."""
         channel = await self.get_channel(self.event.message.chat_id)
         if not channel:
+            logger.info(f"Not channel for forward chat_id: {self.event.message.chat_id}")
             return
 
         self.send_chat_id = await self.get_send_chat_id(channel)

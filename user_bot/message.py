@@ -1,5 +1,6 @@
 from django.db.models import Q
 from Admin.models import Channel, User, Message
+from user_bot.loader import logger
 
 
 class MyMessage:
@@ -39,11 +40,13 @@ class MyMessage:
         """
         # Check if the channel has users and whether they are admin or have a boss.
         if not (channel.users.exists() and (channel.users.first().is_admin or channel.users.first().boss.exists())):
+            logger.info(f"Not admin and not boss. chat_id: {channel}")
             return None
 
         # Filter for admin users who have a send channel assigned.
         admin_users = User.objects.filter(~Q(channel_for_send=None), is_admin=True)
         if not admin_users.exists():
+            logger.info(f"Not channel for send. chat_id: {channel}")
             return None
 
         # Return the chat ID for the first valid admin user.
@@ -60,4 +63,5 @@ class MyMessage:
             # Use a lookup for multiple message IDs in the `from_message_ids` field.
             return Message.objects.get(from_chat_id=self.event.chat_id, from_message_ids__contains=message_ids)
         except Message.DoesNotExist:
+            logger.info(f"Not available message_obj. chat_id: {self.event.chat_id}, msg_id: {self.event.message.id}")
             return None

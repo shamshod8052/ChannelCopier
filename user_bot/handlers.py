@@ -1,20 +1,11 @@
-import logging
 from telethon.events import NewMessage, MessageEdited, MessageDeleted
-from telethon.sync import events
+from telethon import events
 
 from user_bot.album import MediaGroup
 from user_bot.delete import DeleteMessage
 from user_bot.edit import EditedMessage
 from user_bot.forward import ForwardMessage
-from user_bot.loader import client
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,  # Set to DEBUG for more detailed output
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-
-logger = logging.getLogger(__name__)  # Name the logger after the current module
+from user_bot.loader import client, logger
 
 
 @client.on(events.Album)
