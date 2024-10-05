@@ -34,9 +34,12 @@ class MediaGroup(events.Album):
         )
 
     async def _send_media_group(self):
+        caption = None
         messages = self.album.messages
-        text = self.album.messages[0].text
-        entities = self.album.messages[0].entities
-        caption = await TextCleaner.clean_text(text, entities)
+        for message in messages:
+            if message.text:
+                caption = await TextCleaner.clean_text(message.text, message.entities)
+                break
+
         to_msgs = await client.send_file(self.send_chat_id, file=messages, caption=caption)
         return messages, to_msgs
