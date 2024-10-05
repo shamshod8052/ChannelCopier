@@ -15,7 +15,8 @@ async def handle_media_group(album: events.Album):
 
 @client.on(NewMessage)
 async def handle_new_message(event: NewMessage.Event):
-    await ForwardMessage(event).forward()
+    if not event.message.grouped_id:
+        await ForwardMessage(event).forward()
 
 
 @client.on(MessageEdited)
