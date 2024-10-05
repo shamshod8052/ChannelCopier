@@ -25,7 +25,7 @@ async def handle_media_group(album: events.Album.Event):
     """
     try:
         logger.info(f"Received media group with ID: {album.messages[0].grouped_id} from chat: {album.chat_id}")
-        await MediaGroup(album).send_media_group()
+        await MediaGroup(album, album.messages).send_media_group()
         logger.info(f"Successfully forwarded media group {album.messages[0].grouped_id}")
     except Exception as e:
         logger.error(f"Error forwarding media group: {e}", exc_info=True)
