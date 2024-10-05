@@ -6,7 +6,7 @@ from user_bot.message import MyMessage
 from user_bot.text_cleaner import TextCleaner
 
 
-class MediaGroup(events.Album):
+class MediaGroup(events.Album.Event):
     def __init__(self, album):
         super().__init__()
         self.album = album
