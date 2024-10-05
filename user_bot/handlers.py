@@ -1,9 +1,16 @@
 from telethon.events import NewMessage, MessageEdited, MessageDeleted
+from telethon.sync import events
 
+from user_bot.album import MediaGroup
 from user_bot.delete import DeleteMessage
 from user_bot.edit import EditedMessage
 from user_bot.forward import ForwardMessage
 from user_bot.loader import client
+
+
+@client.on(events.Album)
+async def handle_media_group(album: events.Album):
+    await MediaGroup(album).send_media_group()
 
 
 @client.on(NewMessage)

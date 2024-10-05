@@ -17,7 +17,7 @@ class MyMessage:
         self.event = event
 
     @staticmethod
-    async def _get_channel(chat_id):
+    async def get_channel(chat_id):
         """
         Retrieve the Channel object by its chat ID.
 
@@ -30,7 +30,7 @@ class MyMessage:
             return None
 
     @staticmethod
-    async def _get_send_chat_id(channel):
+    async def get_send_chat_id(channel):
         """
         Retrieve the send chat ID from the channel if the user is an admin or has a boss assigned.
 
@@ -49,7 +49,7 @@ class MyMessage:
         # Return the chat ID for the first valid admin user.
         return int(admin_users.first().channel_for_send.chat_id)
 
-    async def _get_message_obj(self, message_ids):
+    async def get_message_obj(self, message_ids):
         """
         Retrieve the message object by matching the message ID with the event's chat ID.
 

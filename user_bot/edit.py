@@ -26,7 +26,7 @@ class EditedMessage(MyMessage):
         """
         await asyncio.sleep(SLEEP_TIME_EDIT)
         # Retrieve the corresponding message object from the database
-        message_obj = await self._get_message_obj(self.event.message.id)
+        message_obj = await self.get_message_obj(self.event.message.id)
         if not message_obj:
             return
 

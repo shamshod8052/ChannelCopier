@@ -24,7 +24,7 @@ class DeleteMessage(MyMessage):
         """
         await asyncio.sleep(SLEEP_TIME_EDIT)
         # Retrieve the message object based on the deleted message IDs
-        message_obj = await self._get_message_obj(self.event.deleted_ids)
+        message_obj = await self.get_message_obj(self.event.deleted_ids)
         if not message_obj:
             return
 
