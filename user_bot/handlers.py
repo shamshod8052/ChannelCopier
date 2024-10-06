@@ -1,4 +1,4 @@
-from telethon.events import NewMessage, MessageEdited, MessageDeleted, Album
+from telethon.events import NewMessage, MessageEdited, MessageDeleted, Album, Raw
 
 from user_bot.album import send_media_group
 from user_bot.delete import delete
@@ -30,3 +30,8 @@ async def handle_edited_message(event: MessageEdited.Event):
 async def handle_deleted_message(event: MessageDeleted.Event):
     print(event)
     await delete(event)
+
+
+@client.on(Raw)
+async def handle_raw_event(event):
+    print(event)
