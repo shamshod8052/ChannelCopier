@@ -23,25 +23,43 @@ async def send_album(send_chat_id, posts):
         if message.text:
             caption = await clean_text(message.text, message.entities)
             break
-
-    to_msgs = await client.send_file(send_chat_id, file=posts, caption=caption, parse_mode='markdown')
+    print("caption get success", posts)
+    media = []
+    force_document = False
+    for group_message in posts:
+        if group_message.photo:
+            media.append(group_message.photo)
+        elif group_message.video:
+            media.append(group_message.video)
+        elif group_message.document:
+            media.append(group_message.document)
+            force_document = True
+    to_msgs = await client.send_file(send_chat_id, media, caption=caption, force_document=force_document)
     return posts, to_msgs
 
 
 async def send_media_group(album):
     chat_id = album.messages[0].chat_id
+    if chat_id:
+        print("chat_id is None", album)
     get_channel = await check_channel(chat_id)
     if not get_channel:
+        print("Channel not my list", album)
         return
 
     channels = await get_for_send_channels()
     if not channels:
+        print("Not send channels", album)
         return
-    print(album)
     for channel in channels:
         posts = await get_media_posts_in_group(chat_id, album.messages[0])
+        if not posts:
+            print("Don't get posts", album)
         from_msgs, to_msgs = await send_album(int(channel.chat_id), posts)
-
+        if to_msgs:
+            print("✅ Message sent successfully", album)
+        else:
+            print("❌ Posts not sent", album)
         if not from_msgs or not to_msgs:
             return
 
