@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-from Admin.models import User
+from Admin.models import Channel
 from aio_bot.config import DEFAULT_LANG
 from enums import Texts
 
@@ -14,9 +14,6 @@ async def menu(user):
     if user.is_admin:
         kb.extend(
             [
-                [
-                    KeyboardButton(text=Texts.ADMINS[DEFAULT_LANG]),
-                ],
                 [
                     KeyboardButton(text=Texts.MY_CHANNEL[DEFAULT_LANG]),
                 ]
@@ -40,7 +37,7 @@ async def cancel():
     return keyboard
 
 
-async def channels_kb(user, cancel_kb=False):
+async def channels_kb(cancel_kb=False, goal=Channel.Goals.get):
     if cancel_kb:
         kb = [
             [
@@ -57,75 +54,8 @@ async def channels_kb(user, cancel_kb=False):
                 KeyboardButton(text=Texts.MAIN_MENU[DEFAULT_LANG]),
             ]
         ]
-
-    for n, channel in enumerate(user.channels.all()):
-        name = f"@{channel.username}" if channel.username else channel.full_name if channel.full_name else channel.chat_id if channel.chat_id else 'x'
-        name.replace('https://t.me/', '')
-        kb.append(
-            [
-                KeyboardButton(text=f"{n + 1}. " + name)
-            ]
-        )
-
-    keyboard = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
-
-    return keyboard
-
-
-async def admins_kb(user, cancel_kb=False):
-    if cancel_kb:
-        kb = [
-            [
-                KeyboardButton(text=Texts.CANCEL[DEFAULT_LANG]),
-            ]
-        ]
-    else:
-        kb = [
-            [
-                KeyboardButton(text=Texts.ADD[DEFAULT_LANG]),
-                KeyboardButton(text=Texts.REMOVE[DEFAULT_LANG]),
-            ],
-            [
-                KeyboardButton(text=Texts.MAIN_MENU[DEFAULT_LANG]),
-            ]
-        ]
-
-    for n, admin in enumerate(user.admins.all()):
-        name = f"@{admin.username}" if admin.username else admin.full_name if admin.full_name else admin.chat_id if admin.chat_id else 'x'
-        name.replace('https://t.me/', '')
-        kb.append(
-            [
-                KeyboardButton(text=f"{n + 1}. " + name)
-            ]
-        )
-
-    keyboard = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
-
-    return keyboard
-
-
-async def my_channel_kb(cancel_kb=False):
-    if cancel_kb:
-        kb = [
-            [
-                KeyboardButton(text=Texts.CANCEL[DEFAULT_LANG]),
-            ]
-        ]
-    else:
-        kb = [
-            [
-                KeyboardButton(text=Texts.CHANGE[DEFAULT_LANG]),
-                KeyboardButton(text=Texts.REMOVE[DEFAULT_LANG]),
-            ],
-            [
-                KeyboardButton(text=Texts.MAIN_MENU[DEFAULT_LANG]),
-            ]
-        ]
-    admins = User.objects.filter(is_admin=True)
-    for n, admin in enumerate(admins.all()):
-        channel = admin.channel_for_send
-        if not channel:
-            continue
+    channels = Channel.objects.filter(goal=goal)
+    for n, channel in enumerate(channels.all()):
         name = f"@{channel.username}" if channel.username else channel.full_name if channel.full_name else channel.chat_id if channel.chat_id else 'x'
         name.replace('https://t.me/', '')
         kb.append(

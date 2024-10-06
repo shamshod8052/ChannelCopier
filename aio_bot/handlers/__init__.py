@@ -1,4 +1,4 @@
+from . import is_not_admin
 from . import channels
-from . import admins
 from . import my_channel
 from . import echo
