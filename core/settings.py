@@ -6,12 +6,6 @@ env.read_env()
 
 SECRET_KEY = env.str('SECRET_KEY')
 
-DB_USER = env.str('DB_USER')
-DB_PASS = env.str('DB_PASS')
-DB_HOST = env.str('DB_HOST')
-DB_NAME = env.str('DB_NAME')
-DB_PORT = env.str('DB_PORT')
-
 DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = ['*']
@@ -67,12 +61,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        "ENGINE": "django.db.backends.postgresql",
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASS,
-        'HOST': DB_HOST,
-        'PORT': DB_PORT,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
