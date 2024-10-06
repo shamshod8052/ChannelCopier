@@ -22,18 +22,18 @@ async def edit_single_message(event, to_chat_id, to_message_id):
             file=helper_msg,
             parse_mode='markdown'
         )
-        print("✅ Message edited successfully", event)
+        print(event.chat.title, "✅ Message edited successfully", event)
     except MessageNotModifiedError:
-        print("MessageNotModifiedError", event)
+        print(event.chat.title, "MessageNotModifiedError", event)
     except Exception as e:
-        print(f"Error editing message: {e}", event)
+        print(event.chat.title, f"Error editing message: {e}", event)
 
 
 async def edit(event):
     await asyncio.sleep(SLEEP_TIME_EDIT)
     message_objs = await get_message_objs(event.chat_id, [event.message.id])
     if not message_objs:
-        print("Message obj not found", event)
+        print(event.chat.title, "Message obj not found", event)
         return
     for msg_obj in message_objs:
         to_chat_id = int(msg_obj.to_chat_id)
@@ -45,5 +45,5 @@ async def edit(event):
             continue
 
         if to_chat_id and to_message_id:
-            print(f"to_chat_id and to_message_id kam ekan. {to_chat_id} - {to_message_id}", event)
+            print(event.chat.title, f"to_chat_id and to_message_id kam ekan. {to_chat_id} - {to_message_id}", event)
             await edit_single_message(event, to_chat_id, to_message_id)
