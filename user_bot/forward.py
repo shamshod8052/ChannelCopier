@@ -28,7 +28,7 @@ async def forward(event):
         return
     print(event)
     for channel in channels:
-        from_msgs, to_msgs = await forward_single_message(event, channel.chat_id)
+        from_msgs, to_msgs = await forward_single_message(event, int(channel.chat_id))
 
         if not from_msgs or not to_msgs:
             return

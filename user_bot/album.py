@@ -1,6 +1,6 @@
 from Admin.models import Message
 from user_bot.loader import client
-from user_bot.message import get_channel, get_send_chat_id, check_channel, get_for_send_channels
+from user_bot.message import check_channel, get_for_send_channels
 from user_bot.text_cleaner import clean_text
 
 
@@ -40,7 +40,7 @@ async def send_media_group(album):
     print(album)
     for channel in channels:
         posts = await get_media_posts_in_group(chat_id, album.messages[0])
-        from_msgs, to_msgs = await send_album(channel.chat_id, posts)
+        from_msgs, to_msgs = await send_album(int(channel.chat_id), posts)
 
         if not from_msgs or not to_msgs:
             return
