@@ -40,9 +40,10 @@ async def send_album(send_chat_id, posts):
 
 async def send_media_group(album):
     chat_id = album.messages[0].chat_id
-    if chat_id:
+    if not chat_id:
         print(album.messages[0].id, "chat_id is None", album)
     get_channel = await check_channel(chat_id)
+    print(get_channel)
     if not get_channel:
         print(album.messages[0].id, "Channel not my list", album)
         return
