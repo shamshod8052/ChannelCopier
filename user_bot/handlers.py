@@ -1,4 +1,4 @@
-from telethon.events import NewMessage, MessageEdited, MessageDeleted, Album, Raw
+from telethon.events import NewMessage, MessageEdited, MessageDeleted, Album, Raw, StopPropagation
 
 from user_bot.album import send_media_group
 from user_bot.delete import delete
@@ -10,18 +10,26 @@ async def handle_media_group(album: Album.Event):
     print(album)
     await send_media_group(album)
 
+    raise StopPropagation
+
 
 async def handle_new_message(event: NewMessage.Event):
     print(event)
     if not event.message.grouped_id:
         await forward(event)
 
+    raise StopPropagation
+
 
 async def handle_edited_message(event: MessageEdited.Event):
     print(event)
     await edit(event)
 
+    raise StopPropagation
+
 
 async def handle_deleted_message(event: MessageDeleted.Event):
     print(event)
     await delete(event)
+
+    raise StopPropagation

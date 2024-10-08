@@ -22,10 +22,10 @@ async def main():
     await client.start(phone=NUMBER)
     await on_startup_notify(client)
     from user_bot.handlers import handle_media_group, handle_deleted_message, handle_new_message, handle_edited_message
-    client.add_event_handler(handle_media_group, Album)
-    client.add_event_handler(handle_new_message, NewMessage)
     client.add_event_handler(handle_edited_message, MessageEdited)
     client.add_event_handler(handle_deleted_message, MessageDeleted)
+    client.add_event_handler(handle_media_group, Album)
+    client.add_event_handler(handle_new_message, NewMessage(func=lambda event: not event.message.grouped_id))
     await client.run_until_disconnected()
 
 
