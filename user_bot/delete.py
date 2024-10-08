@@ -30,6 +30,7 @@ async def delete(event):
                 to_message_ids.append(msg_obj.to_message_ids.pop(from_index))
             except ValueError:
                 continue
+        print(to_message_ids)
 
         msg_obj.save()
 

@@ -23,7 +23,7 @@ async def send_album(send_chat_id, posts):
         if message.text:
             caption = await clean_text(message.text, message.entities)
             break
-    print(posts[0].id, "caption get success", posts)
+    print(posts[0].id, "caption get success", caption)
     media = []
     force_document = False
     for group_message in posts:
