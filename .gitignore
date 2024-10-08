@@ -163,3 +163,4 @@ cython_debug/
 Admin/migrations/
 .idea
 user_bot/sessions/
+static
