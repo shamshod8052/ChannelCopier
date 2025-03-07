@@ -160,7 +160,11 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
-Admin/migrations/
-.idea
-user_bot/sessions/
-static
+Admin/migrations/*
+!Admin/migrations/__init__.py
+.idea/
+static/
+UserBot/sessions/*
+!UserBot/sessions/.gitignore
+logs/*
+!logs/.gitignore
