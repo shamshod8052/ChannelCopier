@@ -12,6 +12,7 @@ from cleaning import db_cleaning_manager
 
 
 async def on_startup_notify(client_: TelegramClient) -> None:
+    await client_.send_message('me', '"Channel copier" nomli user bot ishga tushdi!')
     me = await client_.get_me()
     fullname = me.first_name or '' + (f' {me.last_name}' if me.last_name else '')
     logging.info(f"Run polling for user @{me.username} id={me.id} - '{fullname}'")
