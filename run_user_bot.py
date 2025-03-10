@@ -15,8 +15,8 @@ async def on_startup_notify(client_: TelegramClient) -> None:
     await client_.send_message('me', '"Channel copier" nomli user bot ishga tushdi!')
     me = await client_.get_me()
     fullname = me.first_name or '' + (f' {me.last_name}' if me.last_name else '')
-    logging.info(f"Run polling for user @{me.username} id={me.id} - '{fullname}'")
-    logging.info(f"Running time {now()}")
+    print(f"Run polling for user @{me.username} id={me.id} - '{fullname}'")
+    print(f"Running time {now()}")
 
 
 async def scheduler():
@@ -41,5 +41,5 @@ async def main():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    logging.basicConfig(level=logging.ERROR, stream=sys.stdout)
     asyncio.run(main())

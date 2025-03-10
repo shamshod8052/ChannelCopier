@@ -68,7 +68,7 @@ class Channel(models.Model):
         return last_message
 
     async def get_free_messages_ids(self, client: TelegramClient) -> List[int]:
-        last_msg_obj = await self.messages.get_last_message_obj()
+        last_msg_obj = await self.messages.get_last_obj()
         channel_last_msg = await self.get_channel_last_message(client)
 
         if not last_msg_obj:
@@ -165,7 +165,7 @@ class Getter(models.Model):
 
 
 class MessageManager(models.Manager):
-    async def get_last_message_obj(self) -> Optional['Message']:
+    async def get_last_obj(self) -> Optional['Message']:
         if self.exists():
             max_msg_id = self.aggregate(Max('message_id'))['message_id__max']
             return self.get(message_id=max_msg_id)
