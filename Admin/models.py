@@ -126,7 +126,7 @@ class Channel(models.Model):
             msgs_group.append(message)
             self.grouped_id = message.grouped_id
 
-        return msgs_group
+        return msgs_group[:-1]
 
     def __str__(self):
         return self.full_name or self.chat_id
