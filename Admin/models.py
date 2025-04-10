@@ -10,7 +10,7 @@ from telethon import TelegramClient
 from telethon.tl.types import Message as TeleMessage
 from tinymce.models import HTMLField
 
-from UserBot.config import COPY_START_TIME
+from UserBot.config import COPY_START_TIME, INTERVAL_SECONDS
 
 
 class User(models.Model):
@@ -46,6 +46,9 @@ class ERROR:
     class TIME:
         time_diff: Optional[datetime.timedelta] = None
     @dataclass
+    class TIME_INTERVAL:
+        time_diff: Optional[datetime.timedelta] = None
+    @dataclass
     class EQUAL_GROUPED_ID:
         message: Optional[str] = None
 
@@ -79,11 +82,13 @@ class Channel(models.Model):
         return list(range(last_msg_id, channel_last_msg.id + 1))
 
     async def check_message(self, message: TeleMessage) -> Union[
-        ERROR.READY, ERROR.TIME, ERROR.EQUAL_GROUPED_ID
+        ERROR.READY, ERROR.TIME, ERROR.TIME_INTERVAL, ERROR.EQUAL_GROUPED_ID
     ]:
         time_diff = datetime.datetime.now(pytz.timezone('Asia/Tashkent')) - message.date
         if time_diff.seconds > COPY_START_TIME:
             return ERROR.TIME(time_diff)
+        if time_diff.seconds <= INTERVAL_SECONDS:
+            return ERROR.TIME_INTERVAL(time_diff)
         if message.grouped_id and message.grouped_id == self.grouped_id:
             return ERROR.EQUAL_GROUPED_ID()
 
@@ -119,6 +124,9 @@ class Channel(models.Model):
                     break
                 is_continue = True
                 continue
+            if isinstance(error_type, ERROR.TIME_INTERVAL):
+                logging.info(f"Message time is less than interval")
+                break
             if isinstance(error_type, ERROR.EQUAL_GROUPED_ID):
                 logging.info(f"This media group member has already been added.")
                 continue
