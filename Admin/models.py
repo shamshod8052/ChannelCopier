@@ -134,7 +134,7 @@ class Channel(models.Model):
             msgs_group.append(message)
             self.grouped_id = message.grouped_id
 
-        return msgs_group[:-1]
+        return msgs_group[:-1] if len(msgs_group) > 1 else msgs_group
 
     def __str__(self):
         return self.full_name or self.chat_id
