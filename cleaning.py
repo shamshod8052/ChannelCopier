@@ -3,8 +3,10 @@ from datetime import timedelta
 
 from django.utils.timezone import now
 
+from db_utils import recycle_db_connections
 
 
+@recycle_db_connections
 def db_cleaning_manager():
     """Cleaner function for old db objects"""
     from Admin.models import Message

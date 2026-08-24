@@ -8,6 +8,7 @@ from Admin.models import User, Sender, Getter
 from UserBot.album import MyAlbum
 from UserBot.forward import Forward
 from UserBot.loader import client
+from db_utils import recycle_db_connections
 
 
 async def mailing_manager(sender_msg: TeleMessage, sender: Sender, getter: Getter):
@@ -54,6 +55,7 @@ async def user_manager(user: User):
     await asyncio.gather(*tasks)
 
 
+@recycle_db_connections
 async def copy_manager():
     """Creates a task that copies messages for each user"""
     logging.info("Copying manager running")

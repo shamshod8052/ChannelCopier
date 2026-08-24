@@ -75,7 +75,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql",
-        'CONN_MAX_AGE': None,
+        'CONN_MAX_AGE': 60,
+        'CONN_HEALTH_CHECKS': True,
         'NAME': DB_NAME,
         'USER': DB_USER,
         'PASSWORD': DB_PASS,
