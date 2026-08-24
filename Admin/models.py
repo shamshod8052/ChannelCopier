@@ -111,7 +111,7 @@ class Channel(models.Model):
                 continue
             error_type = await self.check_message(message)
             if isinstance(error_type, ERROR.TIME):
-                logging.info(f"The message is too old.")
+                logging.info(f"{self.username} The message is too old.")
                 last_messages = await client.get_messages(
                     self.chat_id,
                     limit=1,
