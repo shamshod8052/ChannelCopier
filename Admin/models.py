@@ -12,6 +12,8 @@ from tinymce.models import HTMLField
 
 from UserBot.config import COPY_START_TIME, INTERVAL_SECONDS
 
+MAX_BACKLOG_MESSAGES = 200
+
 
 class User(models.Model):
     full_name = models.CharField(max_length=255, null=True, blank=True)
@@ -79,15 +81,19 @@ class Channel(models.Model):
         else:
             last_msg_id = last_msg_obj.message_id + 1
 
+        # After a long downtime don't walk the whole backlog: it hits flood waits
+        # and those messages are older than COPY_START_TIME anyway.
+        last_msg_id = max(last_msg_id, channel_last_msg.id - MAX_BACKLOG_MESSAGES)
+
         return list(range(last_msg_id, channel_last_msg.id + 1))
 
     async def check_message(self, message: TeleMessage) -> Union[
         ERROR.READY, ERROR.TIME, ERROR.TIME_INTERVAL, ERROR.EQUAL_GROUPED_ID
     ]:
         time_diff = datetime.datetime.now(pytz.timezone('Asia/Tashkent')) - message.date
-        if time_diff.seconds > COPY_START_TIME:
+        if time_diff.total_seconds() > COPY_START_TIME:
             return ERROR.TIME(time_diff)
-        if time_diff.seconds <= INTERVAL_SECONDS:
+        if time_diff.total_seconds() <= INTERVAL_SECONDS:
             return ERROR.TIME_INTERVAL(time_diff)
         if message.grouped_id and message.grouped_id == self.grouped_id:
             return ERROR.EQUAL_GROUPED_ID()
@@ -97,32 +103,15 @@ class Channel(models.Model):
     async def get_free_messages_group(self, client: TelegramClient) -> List[TeleMessage]:
         """Kanaldagi yuborilmagan xabarlar ro'yxati. media_group uchun bitta message_id olinadi."""
         msgs_group = []
-        is_continue, begin_message_id = False, None
         msg_ids = await self.get_free_messages_ids(client)
         messages = await client.get_messages(self.chat_id, ids=msg_ids)
         for message in messages:
             if not message:
                 logging.info(f"Not message")
                 continue
-            if message.id == begin_message_id:
-                is_continue = False
-            if is_continue:
-                logging.info(f"Continued: is_continue=True")
-                continue
             error_type = await self.check_message(message)
             if isinstance(error_type, ERROR.TIME):
                 logging.info(f"{self.username} The message is too old.")
-                last_messages = await client.get_messages(
-                    self.chat_id,
-                    limit=1,
-                    offset_date=error_type.time_diff,
-                    reverse=True
-                )
-                if last_messages:
-                    begin_message_id = last_messages[0].id
-                else:
-                    break
-                is_continue = True
                 continue
             if isinstance(error_type, ERROR.TIME_INTERVAL):
                 logging.info(f"Message time is less than interval")
