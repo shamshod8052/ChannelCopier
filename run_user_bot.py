@@ -8,6 +8,7 @@ from telethon import TelegramClient
 
 from UserBot.config import PHONE_NUMBER, INTERVAL_SECONDS
 from UserBot.loader import client
+import UserBot.handlers  # noqa: F401  registers the event handlers on client
 from cleaning import db_cleaning_manager
 
 
