@@ -1,0 +1,20 @@
+version: 1
+name: channelcopier
+run: systemd
+
+# Prod (NDT, /opt/copier): copier-site — gunicorn, 1 worker, 127.0.0.1:8010 (admin sayt);
+# copier-bot — run_user_bot.py (Telethon userbot, Telegram sessiyasi faqat unda).
+systemd:
+  units: [copier-site, copier-bot]
+  web: 8010
+
+# test, deploy va backup hali yozilmagan: prod'dagi joriy tartib Steward sozlamalarida turadi.
+
+# Admin sayt /healthz: faqat bazaga SELECT 1 (Admin/views.py: healthz); bosh sahifa / 404 qaytaradi — bu normal.
+health: /healthz
+
+domains:
+  prod: [copier.nextdevteam.uz]
+
+secrets: [SECRET_KEY, DB_PASS, API_ID, API_HASH]
+database: postgres
