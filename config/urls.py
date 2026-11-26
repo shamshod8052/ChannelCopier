@@ -5,7 +5,10 @@ from django.urls import path, include
 from django.urls import re_path
 from django.views.static import serve
 
+from Admin.views import healthz
+
 urlpatterns = [
+    path('healthz', healthz),
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
 ]
